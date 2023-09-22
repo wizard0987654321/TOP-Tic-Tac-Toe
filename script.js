@@ -8,39 +8,61 @@ for (let i = 0; i < 3; i++) {
         
         square.classList.add("square");
         board.appendChild(square);
-        square.addEventListener("click", playerTurn)
     }
 }
 
-const Gameboard = ((player, choice) => {
-    const gameboard = ["x", "o", "o", "x", "o", "x", "x", "o", "x"];
+const Gameboard = (() => {
+    const xChoices = [];
+    const oChoices = [];
 
-    function displayGameboard(array) {
-        const boardCells = Array.from(document.querySelectorAll(".square"));
-        
-        for (let i = 0; i < 9; i++) {
-            boardCells[i].textContent = array[i];
-
-            boardCells[i].classList.add(i);
+    const change = (choiceIndex, xTurn) => {
+        if (xTurn) {
+            xChoices.push(choiceIndex);
+        } else {
+            oChoices.push(choiceIndex);
         }
     }
 
-    return {
-        display: function () {
-            displayGameboard(gameboard)
-        }
-    };
+    return { change, xChoices, oChoices };
 })();
 
-Gameboard.display();
+const Player = (choice) => {
 
-function playerTurn(e) {
-    if(xTurn == true) {
-        e.target.textContent = "X"
-        xTurn = false;
-    } else {
-        e.target.textContent = "O"
-        xTurn = true;
+    const getChoice = () => {
+        return choice;
     }
- }
+
+    return {getChoice}
+}
+
+const game = (() => { 
+
+
+const boardCells = Array.from(document.querySelectorAll(".square"));
+
+    for (let i = 0; i < 9; i++) { 
+        boardCells[i].setAttribute("data-cell-index", i); 
+        boardCells[i].addEventListener("click", (e) => {
+            if(e.target.textContent == "") {
+                if(xTurn) {
+                    e.target.textContent = "X";
+                    xTurn = false;
+                } else {
+                    e.target.textContent = "O"
+                    xTurn = true;
+                }
+                let turnIndex = e.target.getAttribute("data-cell-index");
+                Gameboard.change(turnIndex, xTurn);
+                console.log(Gameboard.xChoices);
+                console.log(Gameboard.oChoices);
+            }
+        })
+    }
+    
+})();
+
+
+
+
+
 
