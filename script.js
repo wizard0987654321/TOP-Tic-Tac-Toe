@@ -1,3 +1,4 @@
+// Declare global variables
 const board = document.querySelector(".gameboard");
 let winText = document.querySelector("h2");
 let xTurn = true;
@@ -12,6 +13,7 @@ for (let i = 0; i < 3; i++) {
     }
 }
 
+// Module pattern, that stores choice indexes of users in two different arrays and resets game
 const Gameboard = (() => {
     const xChoices = [];
     const oChoices = [];
@@ -32,12 +34,14 @@ const Gameboard = (() => {
     return { change, xChoices, oChoices, reset };
 })();
 
+// Module pattern, that controls the game flow
 
 const game = (() => { 
 
-
+// Variable that indicates, whether the game is over
 let isOver = false;
 
+// Combinations, that mean that the user won
 const checkCombo = (combo, round) => {
     const winCombos = [
         [0, 1, 2],
@@ -50,17 +54,21 @@ const checkCombo = (combo, round) => {
         [2, 4, 6]
     ];
 
+    // Checking for every member of user choice arrays, whether they consist winning combination
     const isWon = winCombos.some(winCombo => {
         return winCombo.every(index => combo.includes(index));
     });
 
+    // Updating the value of isOver variable, which indicates, that game is over
     isOver = (round == 9) ? true : false;
 
+    // Ending game as a draw, if the game is over and there is no winner
     if(!isWon && isOver) {
         winText.textContent = "It's a draw!";
         isOver = true;
     }
 
+    // Checking, in which round the games was won and declaring the winner
     if(isWon && (round % 2 != 0)) {
         winText.textContent = "Congratulations X, You won!"
         isOver = true;
@@ -70,9 +78,11 @@ const checkCombo = (combo, round) => {
     }
 }
 
+// Creating an array of playing table cells
 const boardCells = Array.from(document.querySelectorAll(".square"));
 let roundCount = 0;
 
+// Assigning onclick function to each of the cells, so user can update the playing table
 for (let i = 0; i < 9; i++) { 
     boardCells[i].setAttribute("data-cell-index", i); 
     boardCells[i].addEventListener("click", (e) => {
@@ -96,6 +106,7 @@ for (let i = 0; i < 9; i++) {
     })
 }
 
+// Getting the value of reset button and assigning onclick function to it, so game can be resetted
 const resetButton = document.querySelector("button");
 
 resetButton.addEventListener("click", () => {
@@ -109,8 +120,6 @@ resetButton.addEventListener("click", () => {
 })
     
 })();
-
-
 
 
 
